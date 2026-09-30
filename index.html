@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Chi tiêu gia đình</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chi tiêu">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F7F1E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17110D" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root{--bg:#F7F1E8;--bar:#FFFFFF;--ink:#2F2118;--ink2:#7A6656;--pri:#F26A12}
+  @media (prefers-color-scheme:dark){:root{--bg:#17110D;--bar:#221A14;--ink:#F4EADF;--ink2:#B3A08F}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);overflow:hidden;font:15px/1.45 -apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink)}
+  body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);background:linear-gradient(var(--bg),var(--bg)) top/100% 50% no-repeat,var(--bar)}
+  iframe{display:block;width:100%;height:100%;border:0;background:var(--bg)}
+  .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);transition:opacity .3s;z-index:2}
+  .splash img{width:84px;height:84px;border-radius:20px;box-shadow:0 8px 22px rgba(242,106,18,.35)}
+  .splash p{margin-top:14px;color:var(--ink2);font-size:14px;text-align:center}
+  .splash.hide{opacity:0;pointer-events:none}
+  .key{max-width:320px;padding:24px;text-align:center}
+  .key input{width:100%;margin-top:14px;padding:12px 14px;border:1px solid #E5D8C8;border-radius:12px;font-size:16px;background:transparent;color:var(--ink)}
+  .key button{width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:16px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="splash" id="splash"><div style="text-align:center"><img src="apple-touch-icon.png" alt=""><p id="msg">Đang mở…</p></div></div>
+<script>
+(function(){
+  var APP = "https://script.google.com/macros/s/AKfycbzbfxZCewuegFe30jkJX0UX7OAyxtAKaKsKb-hO7CK4ldqTaDmuluTIYqUzmv5_a1c5-Q/exec";
+  // Mã truy cập KHÔNG nằm trong mã nguồn: lấy từ #k=... (lần đầu) rồi lưu trên máy
+  var k = null, m = location.hash.match(/k=([A-Za-z0-9]+)/);
+  if (m) k = m[1];
+  try { if (k) localStorage.setItem("ctgd_k", k); else k = localStorage.getItem("ctgd_k"); } catch (e) {}
+  var sp = document.getElementById("splash");
+  if (!k) {
+    sp.innerHTML = '<div class="key"><img src="apple-touch-icon.png" alt="" style="width:72px;height:72px;border-radius:18px"><p style="margin-top:12px">Nhập mã truy cập của gia đình</p><input id="kin" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="kgo">Mở app</button></div>';
+    document.getElementById("kgo").onclick = function(){
+      var v = (document.getElementById("kin").value || "").trim(); if (!v) return;
+      try { localStorage.setItem("ctgd_k", v); } catch (e) {}
+      location.hash = "k=" + v; location.reload();
+    };
+    return;
+  }
+  var f = document.createElement("iframe");
+  f.src = APP + "?k=" + encodeURIComponent(k) + "&shell=1";
+  f.setAttribute("allow", "clipboard-write");
+  f.onload = function(){ setTimeout(function(){ sp.classList.add("hide"); }, 250); };
+  document.body.appendChild(f);
+  setTimeout(function(){ sp.classList.add("hide"); }, 8000);
+})();
+</script>
+</body>
+</html>
